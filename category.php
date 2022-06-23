@@ -2,27 +2,21 @@
   include('lib/secure.php');
   include('lib/connect.php');
   include('lib/queryCategory.php');
-?>
 
-$queryCategory = new QueryCategory();
-        
-  if (!empty($_POST['action']) && $_POST['action'] == 'add' && !empty($_POST['name'])){
-    $category = new Category();
-    $category->setName($_POST['name']);
-    $category->save();
-  }
-
-  
-
+  $queryCategory = new QueryCategory();
+// ===== ↓ここから追加↓ =====
 if (!empty($_POST['action']) && $_POST['action'] == 'add' && !empty($_POST['name'])){
-    $category = new Category();
-    $category->setName($_POST['name']);
-    $category->save();
+  $category = new Category();
+  $category->setName($_POST['name']);
+  $category->save();
+}
+// ===== ↑ここまで追加↑ =====
+ // ===== ↓ここから追加↓ =====
+  // 登録されているカテゴリーをすべて取得
+  $categories = $queryCategory->findAll();
+  // ===== ↑ここまで追加↑ =====
 
-    $categories = $queryCategory->findAll();
-  }
-
-
+?>
 <!doctype html>
 <html lang="ja">
   <head>
@@ -77,7 +71,9 @@ if (!empty($_POST['action']) && $_POST['action'] == 'add' && !empty($_POST['name
         </div>
         <div class="col-md-6">
           <button type="submit" class="btn btn-primary">追加する</button>
-          <hr>
+        
+        <!-- ↓formの下に追加ここから↓ -->
+      <hr>
 
 <?php if ($categories): ?>
       <table class="table table-bordered">
@@ -92,6 +88,9 @@ if (!empty($_POST['action']) && $_POST['action'] == 'add' && !empty($_POST['name
           <tr>
             <td><?php echo $c->getId() ?></td>
             <td><?php echo $c->getName() ?></td>
+
+            <td><a href="category.php?action=edit&id=<?php echo $c->getId() ?>" class="btn btn-success">編集</a></td>
+       
           </tr>
   <?php endforeach ?>
         </tbody>
@@ -99,9 +98,11 @@ if (!empty($_POST['action']) && $_POST['action'] == 'add' && !empty($_POST['name
 <?php else: ?>
       <div class="alert alert-info">カテゴリーはまだ登録されていません。</div>
 <?php endif ?>
+<!-- ↑formの下に追加ここまで↑ -->
+               
+        
+        </div>
 
-
-       </div>
       </form>
 
     </div>
